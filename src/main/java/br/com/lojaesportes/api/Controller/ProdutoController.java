@@ -14,6 +14,8 @@ import br.com.lojaesportes.api.Dto.ProdutoResponseDTO;
 import br.com.lojaesportes.api.Model.Produto;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import br.com.lojaesportes.api.Service.ProdutoService;
@@ -27,27 +29,39 @@ public class ProdutoController {  // CONTROLLER RECEBE AS OPEÇÂOES E PEDIDOS E
     private ProdutoService service;
 
     @GetMapping
-    public List<ProdutoResponseDTO> listar() {
-        return service.listarTodos();
+    public ResponseEntity<List<ProdutoResponseDTO>> listar() {
+        return ResponseEntity.ok(service.listarTodos());
     }
 
     @GetMapping("/{id}")
-    public ProdutoResponseDTO buscaPorId(@PathVariable Long id){
-        return service.buscarPorId(id);
+    public ResponseEntity<ProdutoResponseDTO> buscaPorId(@PathVariable Long id){
+        ProdutoResponseDTO produto = service.buscarPorId(id);
+
+        if( produto == null){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(produto);
     }
 
     @PostMapping
-    public ProdutoResponseDTO salvar(@Valid @RequestBody ProdutoRequestDTO dto){
-        return service.salvar(dto);
+    public ResponseEntity<ProdutoResponseDTO> salvar(@Valid @RequestBody ProdutoRequestDTO dto){
+        ProdutoResponseDTO produto = service.salvar(dto);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(produto);
     }
 
     @PutMapping("/{id}")
-    public ProdutoResponseDTO atualizar(@PathVariable Long id, @Valid @RequestBody ProdutoRequestDTO dto){
-        return service.atualizar(id, dto);
+    public ResponseEntity<ProdutoResponseDTO> atualizar(@PathVariable Long id, @Valid @RequestBody ProdutoRequestDTO dto){
+        ProdutoResponseDTO produto = service.atualizar(id, dto);
+        if(produto == null){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(produto);
     }
 
     @DeleteMapping("/{id}")
-    public void excluir(@PathVariable Long id) {
+    public ResponseEntity<Void> excluir(@PathVariable Long id) {
         service.excluir(id);
+        return ResponseEntity.noContent().build();
     }
 }
