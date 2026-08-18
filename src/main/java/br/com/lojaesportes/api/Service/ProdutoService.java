@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.lojaesportes.api.Dto.ProdutoRequestDTO;
 import br.com.lojaesportes.api.Dto.ProdutoResponseDTO;
+import br.com.lojaesportes.api.Exception.ProdutoNotFoundException;
 import br.com.lojaesportes.api.Model.Categoria;
 import br.com.lojaesportes.api.Model.Produto;
 import br.com.lojaesportes.api.Repository.CategoriaRepository;
@@ -38,10 +39,9 @@ public class ProdutoService {
 
     // Metodo Buscar Produto por ID, retorna um ProdutoResponseDTO;
     public ProdutoResponseDTO buscarPorId(Long id){
-        Produto produto = repository.findById(id).orElse(null);
-        if (produto == null) {
-            return null;
-        }
+
+        Produto produto = repository.findById(id).orElseThrow(() -> new ProdutoNotFoundException("Produto não encontrado com o ID: " + id));
+
         return converterParaResponseDTO(produto);
     }
 

@@ -1,5 +1,8 @@
 package br.com.lojaesportes.api.Exception;
 
-public class ResourceNotFoundException {
-    
+public class ResourceNotFoundException extends RuntimeException {
+
+    public ResourceNotFoundException(String mensagem) {
+        super(mensagem);
+    }
 }
