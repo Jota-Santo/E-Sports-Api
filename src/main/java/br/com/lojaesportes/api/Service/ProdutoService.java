@@ -66,15 +66,14 @@ public class ProdutoService {
     // Metodo Excluir Produto, recebe um ID e retorna void
     public void excluir(Long id) {
 
-        repository.deleteById(id);
+        Produto produto = repository.findById(id).orElseThrow(() -> new ProdutoNotFoundException("Produto não encontrado com o ID: " + id));
 
+        repository.delete(produto);
     }
 
     public ProdutoResponseDTO atualizar(Long id, ProdutoRequestDTO dto){
-        Produto produto = repository.findById(id).orElse(null);
-        if (produto == null){
-            return null;
-        }
+        
+        Produto produto = repository.findById(id).orElseThrow(() -> new ProdutoNotFoundException("Produto não encontrado com o ID: " + id));
 
         preencherProduto(produto, dto);
 
