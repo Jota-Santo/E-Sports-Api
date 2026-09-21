@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.lojaesportes.api.Dto.ProdutoRequestDTO;
 import br.com.lojaesportes.api.Dto.ProdutoResponseDTO;
+import br.com.lojaesportes.api.Exception.ProdutoDuplicateException;
 import br.com.lojaesportes.api.Exception.ProdutoNotFoundException;
 import br.com.lojaesportes.api.Model.Categoria;
 import br.com.lojaesportes.api.Model.Produto;
@@ -50,7 +51,7 @@ public class ProdutoService {
 
         // Verifica se o Produto já existe.
         if (repository.findByNome(dto.getNome()).isPresent()) {
-            throw new RuntimeException("Já existe um produto com esse nome.");
+            throw new ProdutoDuplicateException("Já existe um produto com esse nome.");
         }
         
         // Cria o Produto Se ele não existe:
