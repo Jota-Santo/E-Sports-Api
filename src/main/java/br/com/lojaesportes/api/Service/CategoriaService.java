@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.lojaesportes.api.Exception.CategoriaDuplicateException;
+import br.com.lojaesportes.api.Exception.ProdutoDuplicateException;
 import br.com.lojaesportes.api.Model.Categoria;
 import br.com.lojaesportes.api.Repository.CategoriaRepository;
 
@@ -23,6 +25,11 @@ public class CategoriaService {
     }
 
     public Categoria salvar(Categoria categoria) {
+
+        if (repository.findByNome(categoria.getNome()).isPresent()) {
+            throw new CategoriaDuplicateException("Já existe uma categoria com esse nome.");
+        }
+
         return repository.save(categoria);
     }
 

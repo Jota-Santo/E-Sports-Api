@@ -54,4 +54,11 @@ public class GlobalExceptionHandler {
         .status(HttpStatus.NOT_FOUND)
         .body(ex.getMessage());
     }
+
+    @ExceptionHandler(CategoriaDuplicateException.class)
+    public ResponseEntity<String> tratarCategoriaDuplicada(CategoriaDuplicateException ex){
+        return ResponseEntity
+        .status(HttpStatus.CONFLICT)
+        .body(ex.getMessage());
+    }
 }
