@@ -77,6 +77,11 @@ public class ProdutoService {
         
         Produto produto = repository.findById(id).orElseThrow(() -> new ProdutoNotFoundException("Produto não encontrado com o ID: " + id));
 
+        Produto produtoExistente = repository.findByNome(dto.getNome()).orElse(null);
+        if(produtoExistente != null && !produtoExistente.getId().equals(id)){
+            throw new ProdutoDuplicateException("Já existe um produto com esse nome.");
+        }
+
         preencherProduto(produto, dto);
 
         Produto produtoAtualizado = repository.save(produto);

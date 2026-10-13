@@ -2,22 +2,20 @@ package br.com.lojaesportes.api.Controller;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import br.com.lojaesportes.api.Dto.ProdutoRequestDTO;
 import br.com.lojaesportes.api.Dto.ProdutoResponseDTO;
-import br.com.lojaesportes.api.Model.Produto;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import br.com.lojaesportes.api.Service.ProdutoService;
 import jakarta.validation.Valid;
 
@@ -37,9 +35,6 @@ public class ProdutoController {  // CONTROLLER RECEBE AS OPEÇÂOES E PEDIDOS E
     public ResponseEntity<ProdutoResponseDTO> buscaPorId(@PathVariable Long id){
         ProdutoResponseDTO produto = service.buscarPorId(id);
 
-        if( produto == null){
-            return ResponseEntity.notFound().build();
-        }
         return ResponseEntity.ok(produto);
     }
 
@@ -53,9 +48,7 @@ public class ProdutoController {  // CONTROLLER RECEBE AS OPEÇÂOES E PEDIDOS E
     @PutMapping("/{id}")
     public ResponseEntity<ProdutoResponseDTO> atualizar(@PathVariable Long id, @Valid @RequestBody ProdutoRequestDTO dto){
         ProdutoResponseDTO produto = service.atualizar(id, dto);
-        if(produto == null){
-            return ResponseEntity.notFound().build();
-        }
+        
         return ResponseEntity.ok(produto);
     }
 
