@@ -16,7 +16,7 @@ import br.com.lojaesportes.api.Model.Produto;
 import br.com.lojaesportes.api.Repository.CategoriaRepository;
 import br.com.lojaesportes.api.Repository.ProdutoRepository;
 
-@Service // REALIZA AS OPERAÇÔES PARA O CONTROLLER NÃO RECEBE NADA EM HTTP OS @
+@Service // Service recebe chamadas do Controller e executa as regras de negócio; quem recebe as requisições HTTP é o Controller.
 public class ProdutoService {
 
     @Autowired

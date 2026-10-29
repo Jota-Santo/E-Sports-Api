@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.lojaesportes.api.Dto.CategoriaRequestDTO;
 import br.com.lojaesportes.api.Dto.CategoriaResponseDTO;
 import br.com.lojaesportes.api.Exception.CategoriaDuplicateException;
 import br.com.lojaesportes.api.Exception.CategoriaNotFoundException;
@@ -28,29 +29,39 @@ public class CategoriaService {
         return response;
     }
 
-    public Categoria buscarPorId(Long id) {
-        return repository.findById(id).orElseThrow(() -> new CategoriaNotFoundException ("Categoria não encontrada com o ID: " + id));
+    public CategoriaResponseDTO buscarPorId(Long id) {
+        Categoria categoria = repository.findById(id).orElseThrow(() -> new CategoriaNotFoundException ("Categoria não encontrada com o ID: " + id));
+
+        return converterParaResponseDTO(categoria);
     }
 
-    public Categoria salvar(Categoria categoria) {
+    public CategoriaResponseDTO salvar(CategoriaRequestDTO dto) {
 
-        if (repository.findByNome(categoria.getNome()).isPresent()) {
+        if (repository.findByNome(dto.getNome()).isPresent()) {
             throw new CategoriaDuplicateException("Já existe uma categoria com esse nome.");
         }
 
-        return repository.save(categoria);
+        Categoria categoria = new Categoria();
+
+        categoria.setNome(dto.getNome());
+
+        Categoria categoriaSalva = repository.save(categoria);
+
+        return converterParaResponseDTO(categoriaSalva);
     }
 
-    public Categoria atualizar(Long id, Categoria categoria) {
-        Categoria categoriaatualizar = repository.findById(id).orElseThrow(() -> new CategoriaNotFoundException("Categoria não encontrada com o ID: " + id));
-
-        Categoria categoriaexiste =  repository.findByNome(categoria.getNome()).orElse(null);
-        if (categoriaexiste != null && !categoriaexiste.getId().equals(id)) {throw new CategoriaDuplicateException("Já existe uma categoria com esse nome.");
-        }
+    public CategoriaResponseDTO atualizar(Long id, CategoriaRequestDTO dto) {
         
-        categoriaatualizar.setNome(categoria.getNome());
+        Categoria categoria = repository.findById(id).orElseThrow(() -> new CategoriaNotFoundException("Categoria não encontrada com o ID: " + id));
 
-        return repository.save(categoriaatualizar);
+        Categoria categoriaExiste =  repository.findByNome(dto.getNome()).orElse(null);
+        if (categoriaExiste != null && !categoriaExiste.getId().equals(id)) {throw new CategoriaDuplicateException("Já existe uma categoria com esse nome.");
+        }
+
+        categoria.setNome(dto.getNome());
+
+        Categoria categoriaAtualizada = repository.save(categoria);
+        return converterParaResponseDTO(categoriaAtualizada);
     }
 
     public void excluir(Long id) {
